@@ -1,6 +1,6 @@
 package servidor;
 
-public class principal {
+public class servidor {
 
 	public static void main(String[] args) {
 		jframe marco=new jframe();

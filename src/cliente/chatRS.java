@@ -1,6 +1,6 @@
 package cliente;
 
-public class principal {
+public class chatRS {
 
 	public static void main(String[] args) {
 		jframe marco=new jframe();
