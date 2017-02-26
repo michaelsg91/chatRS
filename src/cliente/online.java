@@ -12,7 +12,7 @@ public class online extends WindowAdapter{
 			Socket socketChat=new Socket("192.168.1.1",9999);
 			
 			paqueteEnvio dato=new paqueteEnvio();
-			dato.setMensaje("9imonline9");
+			dato.setMensaje("9im0nline9");
 			
 			ObjectOutputStream datoEnvio=new ObjectOutputStream(socketChat.getOutputStream());
 			

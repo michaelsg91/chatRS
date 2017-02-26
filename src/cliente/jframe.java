@@ -14,6 +14,7 @@ public class jframe extends JFrame implements Runnable{
 	public JComboBox ip;
 	private String usuario;
 	private JScrollPane barra;
+	private Thread hilo;
 	public jframe(){
 		
 		//--- Frame properties --------------------
@@ -39,6 +40,8 @@ public class jframe extends JFrame implements Runnable{
 		barra=new JScrollPane(area);
 		area.setLineWrap(true);
 		area.setEditable(false);
+		
+		hilo=new Thread(this);
 		//------------------------------------------------------
 		
 		//--- Location elements --------------------------------
@@ -54,6 +57,7 @@ public class jframe extends JFrame implements Runnable{
 		//-----------------------------------------------------
 		
 		enviar.addActionListener(new accionBotonEnviar(this)); //Boton action
+		hilo.start();
 		
 		
 		add(nnick);add(nick);add(online);add(barra);add(ip);add(caja);add(enviar);
@@ -74,7 +78,7 @@ public class jframe extends JFrame implements Runnable{
 				
 				datosRecibidos=(paqueteEnvio)datosEntrada.readObject();
 				
-				if(!datosRecibidos.getMensaje().equals("9imonline9")){
+				if(!datosRecibidos.getMensaje().equals("9im0nline9")){
 					area.append(datosRecibidos.getNick() + ": " + datosRecibidos.getMensaje() + "\n");
 				}else{
 					ipsOnline=datosRecibidos.getIps();
