@@ -14,7 +14,7 @@ public class accionBotonEnviar implements ActionListener{
 		chat.area.append(chat.nick.getText() + ": " + chat.caja.getText() + "\n");
 		
 		try{
-			Socket socketServer=new Socket("192.168.1.1",9999); //server ip
+			Socket socketChat=new Socket("192.168.1.1",9999); //server ip
 			
 			paqueteEnvio datos=new paqueteEnvio();
 			
@@ -22,10 +22,10 @@ public class accionBotonEnviar implements ActionListener{
 			datos.setIp(chat.ip.getSelectedItem().toString());
 			datos.setMensaje(chat.caja.getText());
 			
-			ObjectOutputStream datosEnviar=new ObjectOutputStream(socketServer.getOutputStream());
+			ObjectOutputStream datosEnviar=new ObjectOutputStream(socketChat.getOutputStream());
 			datosEnviar.writeObject(datos);
 			
-			socketServer.close();
+			socketChat.close();
 		}catch(UnknownHostException e1){
 			e1.printStackTrace();
 		}catch(IOException e2){

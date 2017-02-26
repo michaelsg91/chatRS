@@ -50,6 +50,9 @@ public class jframe extends JFrame{
 		enviar.setBounds(310,570,80,20);
 		//-----------------------------------------------------
 		
+		enviar.addActionListener(new accionBotonEnviar(this)); //Boton action
+		
+		
 		add(nnick);add(nick);add(online);add(barra);add(ip);add(caja);add(enviar);
 		
 	}
