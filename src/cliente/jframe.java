@@ -3,11 +3,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class jframe extends JFrame{
-	private JLabel nick,nnick, online;
-	private JTextArea area;
+	private JLabel nnick, online;
+	public JLabel nick;
+	public JTextArea area;
 	private JButton enviar;
-	private JTextField caja;
-	private JComboBox ip;
+	public JTextField caja;
+	public JComboBox ip;
 	private String usuario;
 	private JScrollPane barra;
 	public jframe(){
