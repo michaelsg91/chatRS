@@ -1,8 +1,11 @@
 package cliente;
 import javax.swing.*;
+import java.net.*;
 import java.awt.*;
+import java.io.*;
+import java.util.*;
 
-public class jframe extends JFrame{
+public class jframe extends JFrame implements Runnable{
 	private JLabel nnick, online;
 	public JLabel nick;
 	public JTextArea area;
@@ -55,5 +58,38 @@ public class jframe extends JFrame{
 		
 		add(nnick);add(nick);add(online);add(barra);add(ip);add(caja);add(enviar);
 		
+	}
+	public void run(){
+		try{
+			ServerSocket chatServer=new ServerSocket(9090);
+			Socket chat;
+			
+			paqueteEnvio datosRecibidos;
+			
+			ArrayList<String> ipsOnline=new ArrayList<String>();
+			
+			while(true){
+				chat=chatServer.accept();
+				ObjectInputStream datosEntrada=new ObjectInputStream(chat.getInputStream());
+				
+				datosRecibidos=(paqueteEnvio)datosEntrada.readObject();
+				
+				if(!datosRecibidos.getMensaje().equals("9imonline9")){
+					area.append(datosRecibidos.getNick() + ": " + datosRecibidos.getMensaje() + "\n");
+				}else{
+					ipsOnline=datosRecibidos.getIps();
+					ip.removeAllItems();
+					
+					for(String z: ipsOnline){
+						ip.addItem(z);
+					}
+				}
+				
+				
+				
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }
