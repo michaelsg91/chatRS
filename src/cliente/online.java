@@ -1,28 +1,27 @@
 package cliente;
 import java.awt.event.*;
 import java.net.*;
+import javax.swing.JOptionPane;
+
+
 import java.io.*;
 
-
-
-public class online extends WindowAdapter{
+class online extends WindowAdapter{
 	public void windowOpened(WindowEvent e){
-		//------- Notify to server that it's online ----------------------
 		try{
-			Socket socketChat=new Socket("192.168.1.1",9999);
+			Socket miSocket=new Socket("192.168.1.1",9999);
+			paqueteEnvio datos=new paqueteEnvio();
 			
-			paqueteEnvio dato=new paqueteEnvio();
-			dato.setMensaje("9im0nline9");
+			datos.setMensaje("9im0nline9");
 			
-			ObjectOutputStream datoEnvio=new ObjectOutputStream(socketChat.getOutputStream());
+			ObjectOutputStream paqueteDatos=new ObjectOutputStream(miSocket.getOutputStream());
 			
-			datoEnvio.writeObject(dato);
+			paqueteDatos.writeObject(datos);
 			
-			socketChat.close();
+			miSocket.close();
 			
+		}catch(Exception el){
 			
-		}catch(Exception e1){
-			e1.printStackTrace();
 		}
 	}
 }

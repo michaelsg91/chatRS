@@ -10,8 +10,7 @@ import cliente.*;
 public class jframe extends JFrame implements Runnable{
 	private JTextArea area;
 	private JScrollPane barra;
-	private String nick,ip, mensaje;
-	private ArrayList<String> ipsOnline;
+	private Thread hilo;
 	public jframe(){
 		//--- Frame properties --------------------
 		setTitle("Servidor Chat");
@@ -29,74 +28,79 @@ public class jframe extends JFrame implements Runnable{
 		barra=new JScrollPane(area);
 		area.setLineWrap(true);
 		area.setEditable(false);
+		
+		hilo=new Thread(this);
 		//------------------------------------------------------
 		
 		barra.setBounds(5,5,390,590);
 		
 		add(barra);
-	}
+		hilo.start();
+}
 	
 	public void run(){
 		try{
-			ServerSocket serverServer=new ServerSocket(9999);
-			ipsOnline=new ArrayList<String>();
+		ServerSocket socketRecibir=new ServerSocket(9999);
+		String nick, ip, mensaje;
+		ArrayList<String> listaIp=new ArrayList<String>();
+		
+		paqueteEnvio paqueteRecibido;
+		while(true){
+		Socket serverRecibe=socketRecibir.accept();
+		
+				
+		ObjectInputStream paqueteDatos= new ObjectInputStream(serverRecibe.getInputStream());
+		
+		paqueteRecibido=(paqueteEnvio)paqueteDatos.readObject();
+		
+		nick=paqueteRecibido.getNick();
+		ip=paqueteRecibido.getIp();
+		mensaje=paqueteRecibido.getMensaje();
+		
+		
+		if(!mensaje.equals("9im0nline9")){
+		
+		area.append("\n"+ nick +": "+ mensaje + " para " + ip);
+		
+		Socket socketEnvia=new Socket(ip, 9090);
+		
+		ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
+		
+		paqueteReenvio.writeObject(paqueteRecibido);
+		
+		socketEnvia.close();
 			
-			paqueteEnvio datosRecibidos;
-			Socket server,socketServer;
-			String ipEntrante;
+		serverRecibe.close();
+		}else{
 			
-			while(true){
-				//------ Receive-Send data -------------------------------------------------- 
-				server=serverServer.accept();
-				ObjectInputStream datosEntrada=new ObjectInputStream(server.getInputStream());
+			//------- Detecta Online -------------------
+			
+			InetAddress localizacion=serverRecibe.getInetAddress();
+			
+			String IpRemota=localizacion.getHostAddress();
+			
+			System.out.println("Online: " + IpRemota);
+			
+			listaIp.add(IpRemota);
+			
+			paqueteRecibido.setIps(listaIp);
+			
+				for(String z: listaIp){
 				
-				datosRecibidos=(paqueteEnvio)datosEntrada.readObject();
+					Socket socketEnvia=new Socket(z, 9090);
 				
-				nick=datosRecibidos.getNick();
-				ip=datosRecibidos.getIp();
-				mensaje=datosRecibidos.getMensaje();
+					ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
 				
-				if(!mensaje.equals("9im0nline9")){
-					area.append(nick + ": " + mensaje + ". Para: "+ ip + "\n");
+					paqueteReenvio.writeObject(paqueteRecibido);
+				
+					socketEnvia.close();
 					
-					socketServer=new Socket(ip, 9009);
-					
-					ObjectOutputStream datosEnviar=new ObjectOutputStream(socketServer.getOutputStream());
-					
-					datosEnviar.writeObject(datosRecibidos);
-					
-					socketServer.close();
-					server.close();
-				//---------------------------------------------------------------------------	
-				}else{
-					//------ Detect online ----------------------------
-					InetAddress localizacion=server.getInetAddress();
-					
-					ipEntrante=localizacion.getHostAddress();
-					
-					area.append("Online: " + ipEntrante);
-					
-					ipsOnline.add(ipEntrante);
-					
-					datosRecibidos.setIps(ipsOnline);
-					//-------------------------------------------------
-					
-					//------ Send ips ---------------------------------
-					for(String z: ipsOnline){
-						socketServer=new Socket(z,9090);
-						
-						ObjectOutputStream datosEnviar=new ObjectOutputStream(socketServer.getOutputStream());
-						
-						datosEnviar.writeObject(datosRecibidos);
-						
-						socketServer.close();
-												
-					}
-					//-------------------------------------------------
+					serverRecibe.close();
 				}
+			
+			
 			}
-			
-			
+			}
 		}catch(IOException | ClassNotFoundException e){
 			e.printStackTrace();
 		}

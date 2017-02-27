@@ -4,32 +4,33 @@ import java.net.*;
 import java.io.*;
 
 public class accionBotonEnviar implements ActionListener{
-	private jframe chat;
-	public accionBotonEnviar(jframe chat){
-		this.chat=chat;
+	jpanelChat jp;
+	public accionBotonEnviar(jpanelChat jp){
+		this.jp=jp;
 	}
-	
-	//----------------- Event to send data ---------------------------------------------	
 	public void actionPerformed(ActionEvent e){
-		chat.area.append(chat.nick.getText() + ": " + chat.caja.getText() + "\n");
+		jp.area.append("\n" + jp.nick.getText() + ": " + jp.caja.getText());
 		
 		try{
-			Socket socketChat=new Socket("192.168.1.1",9999); //server ip
 			
-			paqueteEnvio datos=new paqueteEnvio();
-			
-			datos.setNick(chat.nick.getText());
-			datos.setIp(chat.ip.getSelectedItem().toString());
-			datos.setMensaje(chat.caja.getText());
-			
-			ObjectOutputStream datosEnviar=new ObjectOutputStream(socketChat.getOutputStream());
-			datosEnviar.writeObject(datos);
-			
-			socketChat.close();
-		}catch(UnknownHostException e1){
-			e1.printStackTrace();
-		}catch(IOException e2){
+		Socket socketEnviar=new Socket("192.168.1.1",9999);
+		
+		paqueteEnvio datos=new paqueteEnvio();
+		datos.setNick(jp.nick.getText());
+		datos.setIp(jp.ip.getSelectedItem().toString());
+		datos.setMensaje(jp.caja.getText());
+		
+		
+		ObjectOutputStream paqueteDatos= new ObjectOutputStream(socketEnviar.getOutputStream());
+		paqueteDatos.writeObject(datos);
+		
+		socketEnviar.close();
+		
+		}catch(UnknownHostException e2){
 			e2.printStackTrace();
+		}catch(IOException e3){
+			e3.printStackTrace();
 		}
+		
 	}
 }
