@@ -14,7 +14,7 @@ public class jframe extends JFrame{
 		pack();
 		setLocationRelativeTo(null);
 		
-		addWindowListener(new online());
+		addWindowListener(new online(this));
 		
 		jp.caja.requestFocus();
 		

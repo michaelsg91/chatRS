@@ -90,15 +90,15 @@ public class jpanelChat extends JPanel implements Runnable{
 					area.append(paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n");
 					
 				}else{
-					ArrayList <String> IpsMenu=new ArrayList<String>();
+					HashMap<String,String> IpsMenu=new HashMap<String,String>();
 					
 					IpsMenu=paqueteRecibido.getIps();
 					
 					ip.removeAllItems();
 					
-					for(String z: IpsMenu){
-						if(!IpRemota.equals(z)){
-							ip.addItem(z);
+					for(Map.Entry<String, String> z: IpsMenu.entrySet()){
+						if(!IpRemota.equals(z.getKey())){
+							ip.addItem(z.getValue());
 						}
 					}
 				}

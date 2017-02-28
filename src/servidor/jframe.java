@@ -42,7 +42,7 @@ public class jframe extends JFrame implements Runnable{
 		try{
 		ServerSocket socketRecibir=new ServerSocket(9999);
 		String nick, ip, mensaje;
-		ArrayList<String> listaIp=new ArrayList<String>();
+		HashMap<String,String> listaIp=new HashMap<String,String>();
 		
 		paqueteEnvio paqueteRecibido;
 		while(true){
@@ -57,10 +57,21 @@ public class jframe extends JFrame implements Runnable{
 		ip=paqueteRecibido.getIp();
 		mensaje=paqueteRecibido.getMensaje();
 		
-		
 		if(!mensaje.equals("9im0nline9")){
+			
+			for(Map.Entry<String, String> z: listaIp.entrySet()){
+				if(z.getValue().equals(ip)){
+					ip=z.getKey();
+				}
+			}
+			
+			
+			InetAddress localizacion=serverRecibe.getInetAddress();
+			
+			String IpRemota=localizacion.getHostAddress();
+			
 		
-		area.append(nick +": "+ mensaje + " para " + ip + "\n");
+		area.append("De " + IpRemota +": "+ mensaje + ". Para: " + ip + "\n");
 		
 		Socket socketEnvia=new Socket(ip, 9090);
 		
@@ -81,13 +92,13 @@ public class jframe extends JFrame implements Runnable{
 			
 			area.append("Online: " + IpRemota + "\n");
 			
-			listaIp.add(IpRemota);
+			listaIp.put(IpRemota,nick);
 			
 			paqueteRecibido.setIps(listaIp);
 			
-				for(String z: listaIp){
+				for(Map.Entry<String, String> z: listaIp.entrySet()){
 				
-					Socket socketEnvia=new Socket(z, 9090);
+					Socket socketEnvia=new Socket(z.getKey(), 9090);
 				
 					ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
 				

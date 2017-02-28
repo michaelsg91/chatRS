@@ -7,6 +7,10 @@ import javax.swing.JOptionPane;
 import java.io.*;
 
 class online extends WindowAdapter{
+	jframe jf;
+	public online(jframe jf){
+		this.jf=jf;
+	}
 	
 	public void windowOpened(WindowEvent e){
 		try{
@@ -14,6 +18,7 @@ class online extends WindowAdapter{
 			paqueteEnvio datos=new paqueteEnvio();
 			
 			datos.setMensaje("9im0nline9");
+			datos.setNick(jf.jp.nick.getText());
 			
 			ObjectOutputStream paqueteDatos=new ObjectOutputStream(miSocket.getOutputStream());
 			

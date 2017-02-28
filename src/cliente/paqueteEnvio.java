@@ -4,16 +4,16 @@ import java.util.*;
 
 public class paqueteEnvio implements Serializable{
 	private String	nick,ip,mensaje;
-	private ArrayList<String> Ips;
+	private HashMap<String,String> Ips;
 
-	public ArrayList<String> getIps() {
+	public HashMap<String, String> getIps() {
 		return Ips;
 	}
 
-	public void setIps(ArrayList<String> ips) {
+	public void setIps(HashMap<String, String> ips) {
 		Ips = ips;
 	}
-
+	
 	public String getNick() {
 		return nick;
 	}

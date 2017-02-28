@@ -1,6 +1,7 @@
 package cliente;
 import java.awt.event.*;
 import java.net.*;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 
@@ -12,13 +13,14 @@ public class accionBotonEnviar implements ActionListener{
 		this.jp=jp;
 	}
 	public void actionPerformed(ActionEvent e){
-		jp.area.append(jp.nick.getText() + ": " + jp.caja.getText() + "\n");
+		jp.area.append("Tú: " + jp.caja.getText() + "\n");
 		
 		try{
 			
 		Socket socketEnviar=new Socket("192.168.1.1",9999);
 		
 		paqueteEnvio datos=new paqueteEnvio();
+		
 		datos.setNick(jp.nick.getText());
 		datos.setIp(jp.ip.getSelectedItem().toString());
 		datos.setMensaje(jp.caja.getText());
