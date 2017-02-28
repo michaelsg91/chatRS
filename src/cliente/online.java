@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import java.io.*;
 
 class online extends WindowAdapter{
+	
 	public void windowOpened(WindowEvent e){
 		try{
 			Socket miSocket=new Socket("192.168.1.1",9999);
@@ -21,7 +22,7 @@ class online extends WindowAdapter{
 			miSocket.close();
 			
 		}catch(Exception el){
-			
+			el.printStackTrace();
 		}
 	}
 }

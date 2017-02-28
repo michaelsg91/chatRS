@@ -16,6 +16,8 @@ public class jframe extends JFrame{
 		
 		addWindowListener(new online());
 		
+		jp.caja.requestFocus();
+		
 	}
 	
 }

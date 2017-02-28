@@ -1,6 +1,9 @@
 package cliente;
 import java.awt.event.*;
 import java.net.*;
+
+import javax.swing.JOptionPane;
+
 import java.io.*;
 
 public class accionBotonEnviar implements ActionListener{
@@ -9,7 +12,7 @@ public class accionBotonEnviar implements ActionListener{
 		this.jp=jp;
 	}
 	public void actionPerformed(ActionEvent e){
-		jp.area.append("\n" + jp.nick.getText() + ": " + jp.caja.getText());
+		jp.area.append(jp.nick.getText() + ": " + jp.caja.getText() + "\n");
 		
 		try{
 			
@@ -31,6 +34,7 @@ public class accionBotonEnviar implements ActionListener{
 		}catch(IOException e3){
 			e3.printStackTrace();
 		}
+		jp.caja.setText("");
 		
 	}
 }

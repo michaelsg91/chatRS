@@ -11,7 +11,7 @@ public class jpanelChat extends JPanel implements Runnable{
 	private JLabel nnick, online;
 	public JLabel nick;
 	public JTextArea area;
-	private JButton enviar;	
+	public JButton enviar;	
 	public JTextField caja;
 	public JComboBox ip;
 	private String usuario;
@@ -30,6 +30,7 @@ public class jpanelChat extends JPanel implements Runnable{
 		ip=new JComboBox();		
 		nick=new JLabel(usuario);
 		caja=new JTextField();
+		
 		nnick=new JLabel("Nick: ");
 		online=new JLabel("Online: ");
 		enviar=new JButton("Enviar");
@@ -54,11 +55,12 @@ public class jpanelChat extends JPanel implements Runnable{
 		enviar.setBounds(310,570,80,20);
 		//-----------------------------------
 		
-		
 		enviar.addActionListener(new accionBotonEnviar(this));// Event to button
 		
-		add(enviar);add(nick);add(nnick);add(online);add(ip);add(barra);add(caja);
-				
+		caja.addKeyListener(new teclaEnviar(this));
+		
+		add(caja);add(enviar);add(nick);add(nnick);add(online);add(ip);add(barra);
+		
 		hilo.start();
 	}
 	
@@ -67,16 +69,25 @@ public class jpanelChat extends JPanel implements Runnable{
 			ServerSocket socketRecibir=new ServerSocket(9090);
 			Socket chatRecibe;
 			
+			
+			
 			paqueteEnvio paqueteRecibido;
 			
 			while(true){
 				chatRecibe=socketRecibir.accept();
+				
+				InetAddress localizacion=chatRecibe.getLocalAddress();
+				
+				
+				String IpRemota=localizacion.getHostAddress();				
+				
+				
 				ObjectInputStream datosEntrada=new ObjectInputStream(chatRecibe.getInputStream());
 				
 				paqueteRecibido=(paqueteEnvio)datosEntrada.readObject();
 				
 				if(!paqueteRecibido.getMensaje().equals("9im0nline9")){
-					area.append("\n"+ paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje());
+					area.append(paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n");
 					
 				}else{
 					ArrayList <String> IpsMenu=new ArrayList<String>();
@@ -86,7 +97,9 @@ public class jpanelChat extends JPanel implements Runnable{
 					ip.removeAllItems();
 					
 					for(String z: IpsMenu){
-						ip.addItem(z);
+						if(!IpRemota.equals(z)){
+							ip.addItem(z);
+						}
 					}
 				}
 				

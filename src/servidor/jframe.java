@@ -60,7 +60,7 @@ public class jframe extends JFrame implements Runnable{
 		
 		if(!mensaje.equals("9im0nline9")){
 		
-		area.append("\n"+ nick +": "+ mensaje + " para " + ip);
+		area.append(nick +": "+ mensaje + " para " + ip + "\n");
 		
 		Socket socketEnvia=new Socket(ip, 9090);
 		
@@ -79,7 +79,7 @@ public class jframe extends JFrame implements Runnable{
 			
 			String IpRemota=localizacion.getHostAddress();
 			
-			System.out.println("Online: " + IpRemota);
+			area.append("Online: " + IpRemota + "\n");
 			
 			listaIp.add(IpRemota);
 			
