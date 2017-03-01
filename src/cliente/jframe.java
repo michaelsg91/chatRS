@@ -4,19 +4,25 @@ import java.awt.BorderLayout;
 import javax.swing.*;
 
 public class jframe extends JFrame{
-	jpanelChat jp;
+	jpanelChat jpc;
+	jpanelNick jpn;
 	public jframe(){
-		jp=new jpanelChat();
+		jpc=new jpanelChat();
+		jpn=new jpanelNick();
 		
 		setTitle("ChatRS");
 		setResizable(false);		
-		add(jp);
+		add(jpc);
+		pack();
+		add(jpn);
 		pack();
 		setLocationRelativeTo(null);
+				
+		jpc.caja.requestFocus();
+		jpn.ok.addActionListener(new accionBotonOk(this));
 		
-		addWindowListener(new online(this));
-		
-		jp.caja.requestFocus();
+		jpc.setVisible(false);
+		jpn.setVisible(true);
 		
 	}
 	

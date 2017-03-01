@@ -39,6 +39,7 @@ public class jframe extends JFrame implements Runnable{
 }
 	
 	public void run(){
+		//--- Recivig packets --------------------------------------------------------------------
 		try{
 		ServerSocket socketRecibir=new ServerSocket(9999);
 		String nick, ip, mensaje;
@@ -57,6 +58,7 @@ public class jframe extends JFrame implements Runnable{
 		ip=paqueteRecibido.getIp();
 		mensaje=paqueteRecibido.getMensaje();
 		
+		//-------  Send messages  ------------------------------------
 		if(!mensaje.equals("9im0nline9")){
 			
 			for(Map.Entry<String, String> z: listaIp.entrySet()){
@@ -82,9 +84,11 @@ public class jframe extends JFrame implements Runnable{
 		socketEnvia.close();
 			
 		serverRecibe.close();
+		//------------------------------------------------------------
+		
 		}else{
 			
-			//------- Detecta Online -------------------
+			//------- Detect Online -------------------
 			
 			InetAddress localizacion=serverRecibe.getInetAddress();
 			
@@ -96,6 +100,7 @@ public class jframe extends JFrame implements Runnable{
 			
 			paqueteRecibido.setIps(listaIp);
 			
+			//--- Send Ips ------------------------------------------------------------
 				for(Map.Entry<String, String> z: listaIp.entrySet()){
 				
 					Socket socketEnvia=new Socket(z.getKey(), 9090);
@@ -108,7 +113,7 @@ public class jframe extends JFrame implements Runnable{
 					
 					serverRecibe.close();
 				}
-			
+			//------------------------------------------------------------------------
 			
 			}
 			}
@@ -116,4 +121,5 @@ public class jframe extends JFrame implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	//-----------------------------------------------------------------------------------------------------------
 }

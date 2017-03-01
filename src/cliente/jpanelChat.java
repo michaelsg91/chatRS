@@ -14,7 +14,7 @@ public class jpanelChat extends JPanel implements Runnable{
 	public JButton enviar;	
 	public JTextField caja;
 	public JComboBox ip;
-	private String usuario;
+	//private String usuario;
 	private JScrollPane barra;
 	private Thread hilo;
 	public jpanelChat(){
@@ -25,10 +25,10 @@ public class jpanelChat extends JPanel implements Runnable{
 		//-----------------------------------------
 			
 		//--- Variables initialization ---------------
-		usuario=JOptionPane.showInputDialog("Nick: ");
+		//usuario=JOptionPane.showInputDialog("Nick: ");
 		
 		ip=new JComboBox();		
-		nick=new JLabel(usuario);
+		nick=new JLabel();
 		caja=new JTextField();
 		
 		nnick=new JLabel("Nick: ");
@@ -65,12 +65,11 @@ public class jpanelChat extends JPanel implements Runnable{
 	}
 	
 	public void run(){
+		//--- Receiving packets --------------------------------------------------------------------
 		try{
 			ServerSocket socketRecibir=new ServerSocket(9090);
 			Socket chatRecibe;
-			
-			
-			
+				
 			paqueteEnvio paqueteRecibido;
 			
 			while(true){
@@ -87,9 +86,10 @@ public class jpanelChat extends JPanel implements Runnable{
 				paqueteRecibido=(paqueteEnvio)datosEntrada.readObject();
 				
 				if(!paqueteRecibido.getMensaje().equals("9im0nline9")){
-					area.append(paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n");
+					area.append(paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n"); //Message
 					
 				}else{
+					//--- Receiving IPs --------------------------------------------
 					HashMap<String,String> IpsMenu=new HashMap<String,String>();
 					
 					IpsMenu=paqueteRecibido.getIps();
@@ -101,6 +101,7 @@ public class jpanelChat extends JPanel implements Runnable{
 							ip.addItem(z.getValue());
 						}
 					}
+					//--------------------------------------------------------------
 				}
 				
 				
@@ -108,5 +109,7 @@ public class jpanelChat extends JPanel implements Runnable{
 		}catch(Exception e){
 			System.out.println(e.getMessage());
 		}
+		
+	//------------------------------------------------------------------------------------------------------	
 	}
 }
