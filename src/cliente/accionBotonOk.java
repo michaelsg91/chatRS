@@ -10,9 +10,9 @@ public class accionBotonOk implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent e){
-		jf.jpc.nick.setText(jf.jpn.cajaNick.getText());
-		jf.jpn.setVisible(false);
-		jf.jpc.setVisible(true);
+				
+		jf.jpc.nick.setText(jf.jpn.cajaNick.getText());		
+		
 		
 		try{
 			Socket miSocket=new Socket("192.168.1.1",9999);
@@ -30,5 +30,6 @@ public class accionBotonOk implements ActionListener{
 		}catch(Exception el){
 			el.printStackTrace();
 		}
+					
 	}
 }

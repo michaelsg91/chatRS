@@ -7,16 +7,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class jpanelChat extends JPanel implements Runnable{
+public class jpanelChat extends JPanel{
 	private JLabel nnick, online;
 	public JLabel nick;
 	public JTextArea area;
 	public JButton enviar;	
 	public JTextField caja;
 	public JComboBox ip;
-	//private String usuario;
 	private JScrollPane barra;
-	private Thread hilo;
+	public boolean b;
 	public jpanelChat(){
 		
 		//--- Panel properties --------------------
@@ -25,8 +24,6 @@ public class jpanelChat extends JPanel implements Runnable{
 		//-----------------------------------------
 			
 		//--- Variables initialization ---------------
-		//usuario=JOptionPane.showInputDialog("Nick: ");
-		
 		ip=new JComboBox();		
 		nick=new JLabel();
 		caja=new JTextField();
@@ -40,7 +37,6 @@ public class jpanelChat extends JPanel implements Runnable{
 		area.setLineWrap(true);
 		area.setEditable(false);
 		
-		hilo=new Thread(this);
 		//---------------------------------------------
 		
 		//--- Location elements -------------
@@ -55,61 +51,11 @@ public class jpanelChat extends JPanel implements Runnable{
 		enviar.setBounds(310,570,80,20);
 		//-----------------------------------
 		
-		enviar.addActionListener(new accionBotonEnviar(this));// Event to button
+		
 		
 		caja.addKeyListener(new teclaEnviar(this));
 		
 		add(caja);add(enviar);add(nick);add(nnick);add(online);add(ip);add(barra);
 		
-		hilo.start();
-	}
-	
-	public void run(){
-		//--- Receiving packets --------------------------------------------------------------------
-		try{
-			ServerSocket socketRecibir=new ServerSocket(9090);
-			Socket chatRecibe;
-				
-			paqueteEnvio paqueteRecibido;
-			
-			while(true){
-				chatRecibe=socketRecibir.accept();
-				
-				InetAddress localizacion=chatRecibe.getLocalAddress();
-				
-				
-				String IpRemota=localizacion.getHostAddress();				
-				
-				
-				ObjectInputStream datosEntrada=new ObjectInputStream(chatRecibe.getInputStream());
-				
-				paqueteRecibido=(paqueteEnvio)datosEntrada.readObject();
-				
-				if(!paqueteRecibido.getMensaje().equals("9im0nline9")){
-					area.append(paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n"); //Message
-					
-				}else{
-					//--- Receiving IPs --------------------------------------------
-					HashMap<String,String> IpsMenu=new HashMap<String,String>();
-					
-					IpsMenu=paqueteRecibido.getIps();
-					
-					ip.removeAllItems();
-					
-					for(Map.Entry<String, String> z: IpsMenu.entrySet()){
-						if(!IpRemota.equals(z.getKey())){
-							ip.addItem(z.getValue());
-						}
-					}
-					//--------------------------------------------------------------
-				}
-				
-				
-			}
-		}catch(Exception e){
-			System.out.println(e.getMessage());
-		}
-		
-	//------------------------------------------------------------------------------------------------------	
 	}
 }

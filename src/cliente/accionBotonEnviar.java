@@ -8,12 +8,12 @@ import javax.swing.JOptionPane;
 import java.io.*;
 
 public class accionBotonEnviar implements ActionListener{
-	jpanelChat jp;
-	public accionBotonEnviar(jpanelChat jp){
+	jframe jp;
+	public accionBotonEnviar(jframe jp){
 		this.jp=jp;
 	}
 	public void actionPerformed(ActionEvent e){
-		jp.area.append("Tú: " + jp.caja.getText() + "\n");
+		jp.jpc.area.append("Tú: " + jp.jpc.caja.getText() + "\n");
 		
 		try{
 			
@@ -21,9 +21,9 @@ public class accionBotonEnviar implements ActionListener{
 		
 		paqueteEnvio datos=new paqueteEnvio();
 		
-		datos.setNick(jp.nick.getText());
-		datos.setIp(jp.ip.getSelectedItem().toString());
-		datos.setMensaje(jp.caja.getText());
+		datos.setNick(jp.jpc.nick.getText());
+		datos.setIp(jp.jpc.ip.getSelectedItem().toString());
+		datos.setMensaje(jp.jpc.caja.getText());
 		
 		
 		ObjectOutputStream paqueteDatos= new ObjectOutputStream(socketEnviar.getOutputStream());
@@ -36,7 +36,7 @@ public class accionBotonEnviar implements ActionListener{
 		}catch(IOException e3){
 			e3.printStackTrace();
 		}
-		jp.caja.setText("");
+		jp.jpc.caja.setText("");
 		
 	}
 }

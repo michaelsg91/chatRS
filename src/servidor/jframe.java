@@ -87,34 +87,59 @@ public class jframe extends JFrame implements Runnable{
 		//------------------------------------------------------------
 		
 		}else{
-			
+			boolean b=true;
 			//------- Detect Online -------------------
 			
 			InetAddress localizacion=serverRecibe.getInetAddress();
 			
 			String IpRemota=localizacion.getHostAddress();
 			
-			area.append("Online: " + IpRemota + "\n");
-			
-			listaIp.put(IpRemota,nick);
-			
-			paqueteRecibido.setIps(listaIp);
-			
-			//--- Send Ips ------------------------------------------------------------
-				for(Map.Entry<String, String> z: listaIp.entrySet()){
+			for(Map.Entry<String, String> z: listaIp.entrySet()){
 				
-					Socket socketEnvia=new Socket(z.getKey(), 9090);
-				
-					ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
-				
-					paqueteReenvio.writeObject(paqueteRecibido);
-				
-					socketEnvia.close();
-					
-					serverRecibe.close();
+				if(nick.equals(z.getValue())){
+					b=false;
 				}
-			//------------------------------------------------------------------------
+			}
 			
+			if(b){
+				area.append("Online: " + IpRemota + "\n");
+				
+				listaIp.put(IpRemota,nick);
+				
+				paqueteRecibido.setIps(listaIp);
+				
+				
+				
+					//--- Send Ips ------------------------------------------------------------
+					for(Map.Entry<String, String> z: listaIp.entrySet()){
+					
+						Socket socketEnvia=new Socket(z.getKey(), 9090);
+					
+						ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
+					
+						paqueteReenvio.writeObject(paqueteRecibido);
+					
+						socketEnvia.close();
+						
+						serverRecibe.close();
+					}
+				//------------------------------------------------------------------------
+
+			}else{
+				Socket socketEnvia=new Socket(IpRemota, 9090);
+				
+				ObjectOutputStream paqueteAutorization=new ObjectOutputStream(socketEnvia.getOutputStream());
+				
+				paqueteRecibido.setMensaje("9unaut0rized9");
+			
+				paqueteAutorization.writeObject(paqueteRecibido);
+			
+				socketEnvia.close();
+				
+				serverRecibe.close();
+		
+			}
+						
 			}
 			}
 		}catch(IOException | ClassNotFoundException e){

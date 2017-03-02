@@ -1,9 +1,16 @@
 package cliente;
 import java.awt.*;
+import java.io.ObjectInputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.*;
 
 public class jpanelNick extends JPanel{
-	private JLabel ingNick,menError;
+	public JLabel ingNick,menError;
 	public JTextField cajaNick;
 	public JButton ok;
 	public jpanelNick(){
@@ -14,7 +21,7 @@ public class jpanelNick extends JPanel{
 		
 		//--- Variables Initialization -------------
 		ingNick=new JLabel("Ingresa tu nombre de usuario:");
-		menError=new JLabel("El usario ya está en uso. Intenta con otro.");
+		menError=new JLabel("");
 		cajaNick=new JTextField();
 		ok=new JButton("OK");
 		//------------------------------------------
@@ -33,5 +40,6 @@ public class jpanelNick extends JPanel{
 		
 		cajaNick.addKeyListener(new teclaOk(this));
 		add(ingNick);add(cajaNick);add(ok);add(menError);
-	}	
+		
+	}
 }
