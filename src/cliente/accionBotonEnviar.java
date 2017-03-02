@@ -24,6 +24,7 @@ public class accionBotonEnviar implements ActionListener{
 		datos.setNick(jp.jpc.nick.getText());
 		datos.setIp(jp.jpc.ip.getSelectedItem().toString());
 		datos.setMensaje(jp.jpc.caja.getText());
+		datos.setTipoMensaje("mensaje");
 		
 		
 		ObjectOutputStream paqueteDatos= new ObjectOutputStream(socketEnviar.getOutputStream());

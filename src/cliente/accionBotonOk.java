@@ -18,8 +18,8 @@ public class accionBotonOk implements ActionListener{
 			Socket miSocket=new Socket("192.168.1.1",9999);
 			paqueteEnvio datos=new paqueteEnvio();
 			
-			datos.setMensaje("9im0nline9");
 			datos.setNick(jf.jpc.nick.getText());
+			datos.setTipoMensaje("nick");
 			
 			ObjectOutputStream paqueteDatos=new ObjectOutputStream(miSocket.getOutputStream());
 			

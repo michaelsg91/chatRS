@@ -3,7 +3,15 @@ import java.io.*;
 import java.util.*;
 
 public class paqueteEnvio implements Serializable{
-	private String	nick,ip,mensaje;
+	private String	nick,ip,mensaje,tipoMensaje;
+	public String getTipoMensaje() {
+		return tipoMensaje;
+	}
+
+	public void setTipoMensaje(String tipoMensaje) {
+		this.tipoMensaje = tipoMensaje;
+	}
+
 	private HashMap<String,String> Ips;
 
 	public HashMap<String, String> getIps() {

@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 
+
 public class jframe extends JFrame implements Runnable{
 	public jpanelChat jpc=new jpanelChat();;
 	public jpanelNick jpn=new jpanelNick();;
@@ -23,7 +24,7 @@ public class jframe extends JFrame implements Runnable{
 		
 		jpn.ok.addActionListener(new accionBotonOk(this));
 		jpc.enviar.addActionListener(new accionBotonEnviar(this));// Event to button
-		
+				
 		jpc.setVisible(false);	
 		
 		hilo.start();
@@ -34,24 +35,24 @@ public class jframe extends JFrame implements Runnable{
 				try{
 					ServerSocket socketRecibir=new ServerSocket(9090);
 					Socket chatRecibe;
+					InetAddress localizacion;					
+					String IpRemota;
 						
 					paqueteEnvio paqueteRecibido;
 					
 					while(true){
 						chatRecibe=socketRecibir.accept();
 						
-						InetAddress localizacion=chatRecibe.getLocalAddress();
-						
-						
-						String IpRemota=localizacion.getHostAddress();				
+						localizacion=chatRecibe.getLocalAddress();						
+						IpRemota=localizacion.getHostAddress();				
 						
 						
 						ObjectInputStream datosEntrada=new ObjectInputStream(chatRecibe.getInputStream());
 						
 						paqueteRecibido=(paqueteEnvio)datosEntrada.readObject();
 						
-						if(paqueteRecibido.getMensaje().equals("9im0nline9")){
-							jpc.caja.requestFocus();
+						if(paqueteRecibido.getTipoMensaje().equals("authorized")){
+							
 							this.jpc.setVisible(true);
 							this.jpn.setVisible(false);
 							//--- Receiving IPs --------------------------------------------
@@ -66,12 +67,13 @@ public class jframe extends JFrame implements Runnable{
 									jpc.ip.addItem(z.getValue());
 								}
 							}
+							this.jpc.caja.requestFocus();
 							//--------------------------------------------------------------
-						}else if(paqueteRecibido.getMensaje().equals("9unaut0rized9")){ 
+						}else if(paqueteRecibido.getTipoMensaje().equals("unauthorized")){ 
 							this.jpc.setVisible(false);
-							jpn.menError.setText("El usario ya está en uso. Intenta con otro.");
+							this.jpn.menError.setText("El usario ya está en uso. Intenta con otro.");
 							this.jpn.setVisible(true);
-						}else{
+						}else if(paqueteRecibido.getTipoMensaje().equals("mensaje")){
 							this.jpc.setVisible(true);
 							this.jpn.setVisible(false);
 							jpc.area.append(paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n"); //Message

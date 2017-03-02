@@ -42,11 +42,14 @@ public class jframe extends JFrame implements Runnable{
 		//--- Recivig packets --------------------------------------------------------------------
 		try{
 		ServerSocket socketRecibir=new ServerSocket(9999);
-		String nick, ip, mensaje;
+		String nick, ip, mensaje,tipoMensaje;
 		HashMap<String,String> listaIp=new HashMap<String,String>();
+		InetAddress localizacion;
+		String IpRemota;
 		
 		paqueteEnvio paqueteRecibido;
 		while(true){
+			
 		Socket serverRecibe=socketRecibir.accept();
 		
 				
@@ -54,24 +57,24 @@ public class jframe extends JFrame implements Runnable{
 		
 		paqueteRecibido=(paqueteEnvio)paqueteDatos.readObject();
 		
+		//--- Read Host address entry --------------------------
+		localizacion=serverRecibe.getInetAddress();		
+		IpRemota=localizacion.getHostAddress();
+		//-----------------------------------------------------
+		
 		nick=paqueteRecibido.getNick();
 		ip=paqueteRecibido.getIp();
 		mensaje=paqueteRecibido.getMensaje();
+		tipoMensaje=paqueteRecibido.getTipoMensaje();
 		
 		//-------  Send messages  ------------------------------------
-		if(!mensaje.equals("9im0nline9")){
+		if(tipoMensaje.equals("mensaje")){
 			
 			for(Map.Entry<String, String> z: listaIp.entrySet()){
 				if(z.getValue().equals(ip)){
 					ip=z.getKey();
 				}
-			}
-			
-			
-			InetAddress localizacion=serverRecibe.getInetAddress();
-			
-			String IpRemota=localizacion.getHostAddress();
-			
+			}					
 		
 		area.append("De " + IpRemota +": "+ mensaje + ". Para: " + ip + "\n");
 		
@@ -86,28 +89,25 @@ public class jframe extends JFrame implements Runnable{
 		serverRecibe.close();
 		//------------------------------------------------------------
 		
-		}else{
+		}else if(tipoMensaje.equals("nick")){
+			
+			//--- Detect if Nick is Repeat ---------------------------
 			boolean b=true;
-			//------- Detect Online -------------------
-			
-			InetAddress localizacion=serverRecibe.getInetAddress();
-			
-			String IpRemota=localizacion.getHostAddress();
-			
-			for(Map.Entry<String, String> z: listaIp.entrySet()){
-				
+						
+			for(Map.Entry<String, String> z: listaIp.entrySet()){				
 				if(nick.equals(z.getValue())){
 					b=false;
 				}
 			}
+			//--------------------------------------------------------
 			
 			if(b){
 				area.append("Online: " + IpRemota + "\n");
 				
 				listaIp.put(IpRemota,nick);
 				
-				paqueteRecibido.setIps(listaIp);
-				
+				paqueteRecibido.setTipoMensaje("authorized");				
+				paqueteRecibido.setIps(listaIp);		
 				
 				
 					//--- Send Ips ------------------------------------------------------------
@@ -126,11 +126,12 @@ public class jframe extends JFrame implements Runnable{
 				//------------------------------------------------------------------------
 
 			}else{
+				
 				Socket socketEnvia=new Socket(IpRemota, 9090);
 				
 				ObjectOutputStream paqueteAutorization=new ObjectOutputStream(socketEnvia.getOutputStream());
 				
-				paqueteRecibido.setMensaje("9unaut0rized9");
+				paqueteRecibido.setTipoMensaje("unauthorized");
 			
 				paqueteAutorization.writeObject(paqueteRecibido);
 			
@@ -140,8 +141,8 @@ public class jframe extends JFrame implements Runnable{
 		
 			}
 						
-			}
-			}
+		}
+		}
 		}catch(IOException | ClassNotFoundException e){
 			e.printStackTrace();
 		}
