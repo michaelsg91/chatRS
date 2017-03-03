@@ -141,7 +141,11 @@ public class jframe extends JFrame implements Runnable{
 		
 			}
 						
+		}else if(tipoMensaje.equals("offline")){
+			listaIp.remove(IpRemota);
+			area.append("Offline: " + IpRemota + "\n");
 		}
+		
 		}
 		}catch(IOException | ClassNotFoundException e){
 			e.printStackTrace();

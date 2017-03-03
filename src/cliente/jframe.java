@@ -27,7 +27,10 @@ public class jframe extends JFrame implements Runnable{
 				
 		jpc.setVisible(false);	
 		
+		addWindowListener(new cerrar());
+		
 		hilo.start();
+		
 	}
 	
 	public void run(){
