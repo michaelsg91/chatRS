@@ -144,6 +144,21 @@ public class jframe extends JFrame implements Runnable{
 		}else if(tipoMensaje.equals("offline")){
 			listaIp.remove(IpRemota);
 			area.append("Offline: " + IpRemota + "\n");
+			paqueteRecibido.setIps(listaIp);		
+			paqueteRecibido.setTipoMensaje("offline");
+			
+			for(Map.Entry<String, String> z: listaIp.entrySet()){
+				
+				Socket socketEnvia=new Socket(z.getKey(), 9090);
+			
+				ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
+				
+				paqueteReenvio.writeObject(paqueteRecibido);
+			
+				socketEnvia.close();
+				
+				serverRecibe.close();
+			}
 		}
 		
 		}

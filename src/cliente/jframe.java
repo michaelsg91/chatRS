@@ -5,7 +5,6 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 
-
 public class jframe extends JFrame implements Runnable{
 	public jpanelChat jpc=new jpanelChat();;
 	public jpanelNick jpn=new jpanelNick();;
@@ -40,7 +39,8 @@ public class jframe extends JFrame implements Runnable{
 					Socket chatRecibe;
 					InetAddress localizacion;					
 					String IpRemota;
-						
+					HashMap<String,String> IpsMenu;
+					
 					paqueteEnvio paqueteRecibido;
 					
 					while(true){
@@ -54,22 +54,28 @@ public class jframe extends JFrame implements Runnable{
 						
 						paqueteRecibido=(paqueteEnvio)datosEntrada.readObject();
 						
-						if(paqueteRecibido.getTipoMensaje().equals("authorized")){
+						if(paqueteRecibido.getTipoMensaje().equals("authorized") || paqueteRecibido.getTipoMensaje().equals("offline")){
 							
 							this.jpc.setVisible(true);
 							this.jpn.setVisible(false);
 							//--- Receiving IPs --------------------------------------------
-							HashMap<String,String> IpsMenu=new HashMap<String,String>();
+							IpsMenu=new HashMap<String,String>();
 							
 							IpsMenu=paqueteRecibido.getIps();
 							
-							jpc.ip.removeAllItems();					
+							jpc.ip.removeAllItems();
 							
 							for(Map.Entry<String, String> z: IpsMenu.entrySet()){
 								if(!IpRemota.equals(z.getKey())){
 									jpc.ip.addItem(z.getValue());
 								}
 							}
+							if(jpc.ip.getSelectedItem()==null){
+								jpc.enviar.setEnabled(false);
+							}else{
+								jpc.enviar.setEnabled(true);
+							}
+							
 							this.jpc.caja.requestFocus();
 							//--------------------------------------------------------------
 						}else if(paqueteRecibido.getTipoMensaje().equals("unauthorized")){ 
