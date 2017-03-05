@@ -18,7 +18,7 @@ public class jpanelChat extends JPanel{
 	public JComboBox ip;
 	public JScrollPane barra;
 	public boolean b;
-	StyledDocument ar;
+	public StyledDocument styleDoc;
 	public jpanelChat(){
 		
 		//--- Panel properties --------------------
@@ -40,7 +40,7 @@ public class jpanelChat extends JPanel{
 		barra=new JScrollPane(area);
 		
 		area.setEditable(false);
-		ar=area.getStyledDocument();
+		styleDoc=area.getStyledDocument();
 				
 		barra.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		barra.setHorizontalScrollBar(null);

@@ -70,11 +70,13 @@ public class jframe extends JFrame implements Runnable{
 		//-------  Send messages  ------------------------------------
 		if(tipoMensaje.equals("mensaje")){
 			
+			//--- Get ip ------------------------------------------
 			for(Map.Entry<String, String> z: listaIp.entrySet()){
 				if(z.getValue().equals(ip)){
 					ip=z.getKey();
 				}
-			}					
+			}
+			//-----------------------------------------------------
 		
 		area.append("De " + IpRemota +": "+ mensaje + ". Para: " + ip + "\n");
 		
@@ -113,58 +115,47 @@ public class jframe extends JFrame implements Runnable{
 					//--- Send Ips ------------------------------------------------------------
 					for(Map.Entry<String, String> z: listaIp.entrySet()){
 					
-						Socket socketEnvia=new Socket(z.getKey(), 9090);
-					
-						ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
-					
-						paqueteReenvio.writeObject(paqueteRecibido);
-					
-						socketEnvia.close();
-						
+						Socket socketEnvia=new Socket(z.getKey(), 9090);					
+						ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());					
+						paqueteReenvio.writeObject(paqueteRecibido);					
+						socketEnvia.close();						
 						serverRecibe.close();
-					}
-				//------------------------------------------------------------------------
-
+					}				
 			}else{
-				
-				Socket socketEnvia=new Socket(IpRemota, 9090);
-				
-				ObjectOutputStream paqueteAutorization=new ObjectOutputStream(socketEnvia.getOutputStream());
-				
-				paqueteRecibido.setTipoMensaje("unauthorized");
-			
-				paqueteAutorization.writeObject(paqueteRecibido);
-			
-				socketEnvia.close();
-				
+				//--- Invalidating session ---------------------
+				Socket socketEnvia=new Socket(IpRemota, 9090);				
+				ObjectOutputStream paqueteAutorization=new ObjectOutputStream(socketEnvia.getOutputStream());				
+				paqueteRecibido.setTipoMensaje("unauthorized");			
+				paqueteAutorization.writeObject(paqueteRecibido);			
+				socketEnvia.close();				
 				serverRecibe.close();
-		
-			}
+				
+			}// End if(b)
 						
 		}else if(tipoMensaje.equals("offline")){
-			listaIp.remove(IpRemota);
+			
+			listaIp.remove(IpRemota); //Remove offline ip
 			area.append("Offline: " + IpRemota + "\n");
 			paqueteRecibido.setIps(listaIp);		
 			paqueteRecibido.setTipoMensaje("offline");
 			
-			for(Map.Entry<String, String> z: listaIp.entrySet()){
-				
-				Socket socketEnvia=new Socket(z.getKey(), 9090);
-			
-				ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
-				
-				paqueteReenvio.writeObject(paqueteRecibido);
-			
-				socketEnvia.close();
-				
+			//--- Send updates Ips -------------------------------
+			for(Map.Entry<String, String> z: listaIp.entrySet()){				
+				Socket socketEnvia=new Socket(z.getKey(), 9090);			
+				ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());				
+				paqueteReenvio.writeObject(paqueteRecibido);			
+				socketEnvia.close();				
 				serverRecibe.close();
 			}
-		}
+			
+		}// End if(offline)
 		
-		}
+		}// End infinite While
+		
 		}catch(IOException | ClassNotFoundException e){
 			e.printStackTrace();
 		}
-	}
-	//-----------------------------------------------------------------------------------------------------------
+		
+	}// End run()
+	
 }

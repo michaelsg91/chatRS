@@ -18,10 +18,13 @@ public class accionBotonEnviar implements ActionListener{
 		
 		try{
 		
-		jp.jpc.ar.insertString(jp.jpc.ar.getLength(),"Tú: " + jp.jpc.caja.getText() + "\n",null);
+		jp.jpc.styleDoc.insertString(jp.jpc.styleDoc.getLength(),"Tú: " + jp.jpc.caja.getText() + "\n",null);// Your message
+		
+		//--- Automatic scrolling down ----------------
 		Dimension tamTextPane=jp.jpc.area.getSize();
 		Point p=new Point(0,tamTextPane.height);
 		jp.jpc.barra.getViewport().setViewPosition(p);
+		//---------------------------------------------
 		
 		Socket socketEnviar=new Socket("192.168.1.1",9999);
 		

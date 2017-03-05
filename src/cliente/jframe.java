@@ -21,8 +21,8 @@ public class jframe extends JFrame implements Runnable{
 		setLocationRelativeTo(null);
 				
 		
-		jpn.ok.addActionListener(new accionBotonOk(this));
-		jpc.enviar.addActionListener(new accionBotonEnviar(this));// Event to button
+		jpn.ok.addActionListener(new accionBotonOk(this));// Action when you click the button
+		jpc.enviar.addActionListener(new accionBotonEnviar(this));// Action when you click the button
 				
 		jpc.setVisible(false);	
 		
@@ -43,7 +43,7 @@ public class jframe extends JFrame implements Runnable{
 					
 					paqueteEnvio paqueteRecibido;
 					
-					while(true){
+					while(true){   // Infinite function
 						chatRecibe=socketRecibir.accept();
 						
 						localizacion=chatRecibe.getLocalAddress();						
@@ -65,11 +65,14 @@ public class jframe extends JFrame implements Runnable{
 							
 							jpc.ip.removeAllItems();
 							
+							//--- Add and remove Ips ---------------------------------------
 							for(Map.Entry<String, String> z: IpsMenu.entrySet()){
 								if(!IpRemota.equals(z.getKey())){
 									jpc.ip.addItem(z.getValue());
 								}
 							}
+							//---------------------------------------------------
+							
 							if(jpc.ip.getSelectedItem()==null){
 								jpc.enviar.setEnabled(false);
 							}else{
@@ -78,22 +81,25 @@ public class jframe extends JFrame implements Runnable{
 							
 							this.jpc.caja.requestFocus();
 							//--------------------------------------------------------------
+							
 						}else if(paqueteRecibido.getTipoMensaje().equals("unauthorized")){ 
 							this.jpc.setVisible(false);
 							this.jpn.menError.setText("El usario ya está en uso. Intenta con otro.");
 							this.jpn.setVisible(true);
 						}else if(paqueteRecibido.getTipoMensaje().equals("mensaje")){
-							this.jpc.setVisible(true);
-							this.jpn.setVisible(false);
+																				
+							jpc.styleDoc.insertString(jpc.styleDoc.getLength(),paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n",null); //Message
 							
-													
-							jpc.ar.insertString(jpc.ar.getLength(),paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n",null); //Message
+							//--- Automatic scrolling down -------------
 							Dimension tamTextPane=jpc.area.getSize();
 							Point p=new Point(0,tamTextPane.height);
 							jpc.barra.getViewport().setViewPosition(p);
+							//------------------------------------------
+							
 						}					
 						
-					}
+					}// End infinite while
+					
 				}catch(Exception e){
 					System.out.println(e.getMessage());
 				}
