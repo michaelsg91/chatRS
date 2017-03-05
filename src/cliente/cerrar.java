@@ -21,7 +21,7 @@ public class cerrar extends WindowAdapter{
 			socketCerrar.close();
 			
 		}catch(Exception el){
-			JOptionPane.showMessageDialog(null, "error ventana");
+			JOptionPane.showMessageDialog(null, "Error en el servidor. Intenta Conectarte más tarde.");
 		}
 	}
 }

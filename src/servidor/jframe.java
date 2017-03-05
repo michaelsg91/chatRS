@@ -1,5 +1,6 @@
 package servidor;
 import java.awt.*;
+import javax.swing.text.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
@@ -8,8 +9,9 @@ import java.util.*;
 import cliente.*;
 
 public class jframe extends JFrame implements Runnable{
-	private JTextArea area;
+	private JTextPane area;
 	private JScrollPane barra;
+	private StyledDocument styleDoc;
 	private Thread hilo;
 	public jframe(){
 		//--- Frame properties --------------------
@@ -24,10 +26,12 @@ public class jframe extends JFrame implements Runnable{
 				
 		//--- Initialization of variables -----------------------
 		
-		area=new JTextArea(390,590);
+		area=new JTextPane();
 		barra=new JScrollPane(area);
-		area.setLineWrap(true);
+		styleDoc=area.getStyledDocument();
 		area.setEditable(false);
+		barra.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		barra.setHorizontalScrollBar(null);
 		
 		hilo=new Thread(this);
 		//------------------------------------------------------
@@ -78,7 +82,13 @@ public class jframe extends JFrame implements Runnable{
 			}
 			//-----------------------------------------------------
 		
-		area.append("De " + IpRemota +": "+ mensaje + ". Para: " + ip + "\n");
+		styleDoc.insertString(styleDoc.getLength(),"De " + IpRemota +": "+ mensaje + ". Para: " + ip + "\n",null);
+		
+		//--- Automatic scrolling down -------------
+		Dimension tamTextPane=area.getSize();
+		Point p=new Point(0,tamTextPane.height);
+		barra.getViewport().setViewPosition(p);
+		//------------------------------------------
 		
 		Socket socketEnvia=new Socket(ip, 9090);
 		
@@ -104,7 +114,13 @@ public class jframe extends JFrame implements Runnable{
 			//--------------------------------------------------------
 			
 			if(b){
-				area.append("Online: " + IpRemota + "\n");
+				styleDoc.insertString(styleDoc.getLength(),"Online: " + IpRemota + "\n",null);
+				
+				//--- Automatic scrolling down -------------
+				Dimension tamTextPane=area.getSize();
+				Point p=new Point(0,tamTextPane.height);
+				barra.getViewport().setViewPosition(p);
+				//------------------------------------------
 				
 				listaIp.put(IpRemota,nick);
 				
@@ -135,7 +151,14 @@ public class jframe extends JFrame implements Runnable{
 		}else if(tipoMensaje.equals("offline")){
 			
 			listaIp.remove(IpRemota); //Remove offline ip
-			area.append("Offline: " + IpRemota + "\n");
+			styleDoc.insertString(styleDoc.getLength(),"Offline: " + IpRemota + "\n", null);
+			
+			//--- Automatic scrolling down -------------
+			Dimension tamTextPane=area.getSize();
+			Point p=new Point(0,tamTextPane.height);
+			barra.getViewport().setViewPosition(p);
+			//------------------------------------------
+			
 			paqueteRecibido.setIps(listaIp);		
 			paqueteRecibido.setTipoMensaje("offline");
 			
@@ -152,7 +175,7 @@ public class jframe extends JFrame implements Runnable{
 		
 		}// End infinite While
 		
-		}catch(IOException | ClassNotFoundException e){
+		}catch(IOException | ClassNotFoundException | BadLocationException e){
 			e.printStackTrace();
 		}
 		

@@ -35,13 +35,10 @@ public class jpanelChat extends JPanel{
 		online=new JLabel("Online: ");
 		enviar=new JButton("Enviar");
 		
-		area=new JTextPane();
-		
-		barra=new JScrollPane(area);
-		
+		area=new JTextPane();		
+		barra=new JScrollPane(area);		
 		area.setEditable(false);
-		styleDoc=area.getStyledDocument();
-				
+		styleDoc=area.getStyledDocument();				
 		barra.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		barra.setHorizontalScrollBar(null);
 		
