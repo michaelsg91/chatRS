@@ -1,4 +1,6 @@
 package cliente;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.*;
 import java.net.*;
 import java.util.Map;
@@ -13,10 +15,14 @@ public class accionBotonEnviar implements ActionListener{
 		this.jp=jp;
 	}
 	public void actionPerformed(ActionEvent e){
-		jp.jpc.area.append("Tú: " + jp.jpc.caja.getText() + "\n");
 		
 		try{
-			
+		
+		jp.jpc.ar.insertString(jp.jpc.ar.getLength(),"Tú: " + jp.jpc.caja.getText() + "\n",null);
+		Dimension tamTextPane=jp.jpc.area.getSize();
+		Point p=new Point(0,tamTextPane.height);
+		jp.jpc.barra.getViewport().setViewPosition(p);
+		
 		Socket socketEnviar=new Socket("192.168.1.1",9999);
 		
 		paqueteEnvio datos=new paqueteEnvio();
@@ -36,6 +42,8 @@ public class accionBotonEnviar implements ActionListener{
 			e2.printStackTrace();
 		}catch(IOException e3){
 			e3.printStackTrace();
+		}catch(Exception e4){
+			
 		}
 		jp.jpc.caja.setText("");
 		

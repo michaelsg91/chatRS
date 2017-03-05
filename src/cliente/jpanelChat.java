@@ -4,18 +4,21 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.text.StyledDocument;
+
 import java.awt.*;
 import java.awt.event.*;
 
 public class jpanelChat extends JPanel{
 	private JLabel nnick, online;
 	public JLabel nick;
-	public JTextArea area;
+	public JTextPane area;
 	public JButton enviar;	
 	public JTextField caja;
 	public JComboBox ip;
-	private JScrollPane barra;
+	public JScrollPane barra;
 	public boolean b;
+	StyledDocument ar;
 	public jpanelChat(){
 		
 		//--- Panel properties --------------------
@@ -32,11 +35,13 @@ public class jpanelChat extends JPanel{
 		online=new JLabel("Online: ");
 		enviar=new JButton("Enviar");
 		
-		area=new JTextArea(400,600);
-		barra=new JScrollPane(area);
-		area.setLineWrap(true);
-		area.setEditable(false);
+		area=new JTextPane();
 		
+		barra=new JScrollPane(area);
+		
+		area.setEditable(false);
+		ar=area.getStyledDocument();
+		area.setAutoscrolls(true);
 		//---------------------------------------------
 		
 		//--- Location elements -------------
