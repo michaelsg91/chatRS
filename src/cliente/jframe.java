@@ -86,6 +86,7 @@ public class jframe extends JFrame implements Runnable{
 							this.jpc.setVisible(true);
 							this.jpn.setVisible(false);
 							
+													
 							jpc.ar.insertString(jpc.ar.getLength(),paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n",null); //Message
 							Dimension tamTextPane=jpc.area.getSize();
 							Point p=new Point(0,tamTextPane.height);

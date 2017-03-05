@@ -41,7 +41,10 @@ public class jpanelChat extends JPanel{
 		
 		area.setEditable(false);
 		ar=area.getStyledDocument();
-		area.setAutoscrolls(true);
+				
+		barra.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		barra.setHorizontalScrollBar(null);
+		
 		//---------------------------------------------
 		
 		//--- Location elements -------------
