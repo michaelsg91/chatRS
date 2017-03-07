@@ -13,6 +13,7 @@ public class jframe extends JFrame implements Runnable{
 	private JScrollPane barra;
 	private StyledDocument styleDoc;
 	private Thread hilo;
+	public SimpleAttributeSet estilo,estilo2,estilo3;
 	public jframe(){
 		//--- Frame properties --------------------
 		setTitle("Servidor Chat");
@@ -33,8 +34,19 @@ public class jframe extends JFrame implements Runnable{
 		barra.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		barra.setHorizontalScrollBar(null);
 		
+		estilo=new SimpleAttributeSet();
+		estilo2=new SimpleAttributeSet();
+		estilo3=new SimpleAttributeSet();
+		
 		hilo=new Thread(this);
 		//------------------------------------------------------
+		
+		//--- Style Message --------------------------------------------
+		StyleConstants.setForeground(estilo, Color.decode("#990024"));
+		
+		StyleConstants.setForeground(estilo2, Color.decode("#06107A"));			
+		
+		StyleConstants.setForeground(estilo3, Color.BLACK);			
 		
 		barra.setBounds(5,5,390,590);
 		
@@ -82,7 +94,7 @@ public class jframe extends JFrame implements Runnable{
 			}
 			//-----------------------------------------------------
 		
-		styleDoc.insertString(styleDoc.getLength(),"De " + IpRemota +": "+ mensaje + ". Para: " + ip + "\n",null);
+		styleDoc.insertString(styleDoc.getLength(),"De " + IpRemota +": "+ mensaje + ". Para: " + ip + "\n",estilo3);
 		
 		//--- Automatic scrolling down -------------
 		Dimension tamTextPane=area.getSize();
@@ -114,7 +126,7 @@ public class jframe extends JFrame implements Runnable{
 			//--------------------------------------------------------
 			
 			if(b){
-				styleDoc.insertString(styleDoc.getLength(),"Online: " + IpRemota + "\n",null);
+				styleDoc.insertString(styleDoc.getLength(),"Online: " + IpRemota + "\n",estilo2);
 				
 				//--- Automatic scrolling down -------------
 				Dimension tamTextPane=area.getSize();
@@ -151,7 +163,7 @@ public class jframe extends JFrame implements Runnable{
 		}else if(tipoMensaje.equals("offline")){
 			
 			listaIp.remove(IpRemota); //Remove offline ip
-			styleDoc.insertString(styleDoc.getLength(),"Offline: " + IpRemota + "\n", null);
+			styleDoc.insertString(styleDoc.getLength(),"Offline: " + IpRemota + "\n", estilo);
 			
 			//--- Automatic scrolling down -------------
 			Dimension tamTextPane=area.getSize();
