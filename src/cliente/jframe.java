@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledEditorKit;
 
 public class jframe extends JFrame implements Runnable{
 	public jpanelChat jpc=new jpanelChat();;
@@ -23,11 +26,10 @@ public class jframe extends JFrame implements Runnable{
 		
 		jpn.ok.addActionListener(new accionBotonOk(this));// Action when you click the button
 		jpc.enviar.addActionListener(new accionBotonEnviar(this));// Action when you click the button
-				
 		jpc.setVisible(false);	
 		
 		addWindowListener(new cerrar());
-		
+				
 		hilo.start();
 		
 	}
@@ -87,8 +89,11 @@ public class jframe extends JFrame implements Runnable{
 							this.jpn.menError.setText("El usario ya está en uso. Intenta con otro.");
 							this.jpn.setVisible(true);
 						}else if(paqueteRecibido.getTipoMensaje().equals("mensaje")){
-																				
-							jpc.styleDoc.insertString(jpc.styleDoc.getLength(),paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n",null); //Message
+							
+							int tam=paqueteRecibido.getNick().length()+paqueteRecibido.getMensaje().length()+2;
+							jpc.styleDoc.setParagraphAttributes(jpc.styleDoc.getLength(), tam, jpc.estilo, false);
+							
+							jpc.styleDoc.insertString(jpc.styleDoc.getLength(),paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n",jpc.estilo);
 							
 							//--- Automatic scrolling down -------------
 							Dimension tamTextPane=jpc.area.getSize();

@@ -1,4 +1,5 @@
 package cliente;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.*;
@@ -6,6 +7,9 @@ import java.net.*;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledEditorKit;
 
 import java.io.*;
 
@@ -18,7 +22,9 @@ public class accionBotonEnviar implements ActionListener{
 		
 		try{
 		
-		jp.jpc.styleDoc.insertString(jp.jpc.styleDoc.getLength(),"Tú: " + jp.jpc.caja.getText() + "\n",null);// Your message
+		jp.jpc.styleDoc.setParagraphAttributes(jp.jpc.styleDoc.getLength(), jp.jpc.caja.getText().length(), jp.jpc.estilo2, false);
+			
+		jp.jpc.styleDoc.insertString(jp.jpc.styleDoc.getLength(), jp.jpc.caja.getText() + "\n", jp.jpc.estilo2);// Your message		
 		
 		//--- Automatic scrolling down ----------------
 		Dimension tamTextPane=jp.jpc.area.getSize();
