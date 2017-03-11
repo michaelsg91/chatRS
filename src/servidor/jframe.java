@@ -13,7 +13,7 @@ public class jframe extends JFrame implements Runnable{
 	private JScrollPane barra;
 	private StyledDocument styleDoc;
 	private Thread hilo;
-	public SimpleAttributeSet estilo,estilo2,estilo3;
+	public SimpleAttributeSet estilo,estilo2;
 	public jframe(){
 		//--- Frame properties --------------------
 		setTitle("Servidor Chat");
@@ -36,7 +36,7 @@ public class jframe extends JFrame implements Runnable{
 		
 		estilo=new SimpleAttributeSet();
 		estilo2=new SimpleAttributeSet();
-		estilo3=new SimpleAttributeSet();
+		
 		
 		hilo=new Thread(this);
 		//------------------------------------------------------
@@ -46,7 +46,7 @@ public class jframe extends JFrame implements Runnable{
 		
 		StyleConstants.setForeground(estilo2, Color.decode("#06107A"));			
 		
-		StyleConstants.setForeground(estilo3, Color.BLACK);			
+				
 		
 		barra.setBounds(5,5,390,590);
 		
@@ -94,7 +94,7 @@ public class jframe extends JFrame implements Runnable{
 			}
 			//-----------------------------------------------------
 		
-		styleDoc.insertString(styleDoc.getLength(),"De " + IpRemota +": "+ mensaje + ". Para: " + ip + "\n",estilo3);
+		styleDoc.insertString(styleDoc.getLength(),"De " + IpRemota +": "+ mensaje + ". Para: todos \n",null);
 		
 		//--- Automatic scrolling down -------------
 		Dimension tamTextPane=area.getSize();
@@ -102,15 +102,17 @@ public class jframe extends JFrame implements Runnable{
 		barra.getViewport().setViewPosition(p);
 		//------------------------------------------
 		
-		Socket socketEnvia=new Socket(ip, 9090);
-		
-		ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
-		
-		paqueteReenvio.writeObject(paqueteRecibido);
-		
-		socketEnvia.close();
+		for(Map.Entry<String, String> z: listaIp.entrySet()){
+			if(!IpRemota.equals(z.getKey())){
+				Socket socketEnvia=new Socket(z.getKey(), 9090);			
+				ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());			
+				paqueteReenvio.writeObject(paqueteRecibido);		
+				socketEnvia.close();				
+				serverRecibe.close();
+			}
 			
-		serverRecibe.close();
+		}
+		
 		//------------------------------------------------------------
 		
 		}else if(tipoMensaje.equals("nick")){
