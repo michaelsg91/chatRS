@@ -69,7 +69,7 @@ public class jframe extends JFrame implements Runnable{
 		Socket serverRecibe=socketRecibir.accept();
 		
 				
-		ObjectInputStream paqueteDatos= new ObjectInputStream(serverRecibe.getInputStream());
+		ObjectInputStream paqueteDatos=new ObjectInputStream(serverRecibe.getInputStream());
 		
 		paqueteRecibido=(paqueteEnvio)paqueteDatos.readObject();
 		
@@ -85,16 +85,32 @@ public class jframe extends JFrame implements Runnable{
 		
 		//-------  Send messages  ------------------------------------
 		if(tipoMensaje.equals("mensaje")){
-			
-			//--- Get ip ------------------------------------------
-			for(Map.Entry<String, String> z: listaIp.entrySet()){
-				if(z.getValue().equals(ip)){
-					ip=z.getKey();
-				}
-			}
-			//-----------------------------------------------------
 		
-		styleDoc.insertString(styleDoc.getLength(),"De " + IpRemota +": "+ mensaje + ". Para: todos \n",null);
+			if(ip.equals("Chat Grupal")){
+				styleDoc.insertString(styleDoc.getLength(),"De " + IpRemota +": "+ mensaje + ". Para: todos \n",null);
+				
+				for(Map.Entry<String, String> z: listaIp.entrySet()){
+					if(!IpRemota.equals(z.getKey())){
+						Socket socketEnvia=new Socket(z.getKey(), 9090);			
+						ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());			
+						paqueteReenvio.writeObject(paqueteRecibido);		
+						socketEnvia.close();				
+						serverRecibe.close();
+					}
+					
+				}
+				
+			}else{
+							
+				Socket socketEnvia=new Socket(ip, 9090);			
+				ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());
+				paqueteRecibido.setIp(IpRemota);
+				paqueteReenvio.writeObject(paqueteRecibido);		
+				socketEnvia.close();				
+				serverRecibe.close();
+				styleDoc.insertString(styleDoc.getLength(),"De " + IpRemota +": "+ mensaje + ". Para: "+ ip +"\n",null);
+								
+			}	
 		
 		//--- Automatic scrolling down -------------
 		Dimension tamTextPane=area.getSize();
@@ -102,18 +118,6 @@ public class jframe extends JFrame implements Runnable{
 		barra.getViewport().setViewPosition(p);
 		//------------------------------------------
 		
-		for(Map.Entry<String, String> z: listaIp.entrySet()){
-			if(!IpRemota.equals(z.getKey())){
-				Socket socketEnvia=new Socket(z.getKey(), 9090);			
-				ObjectOutputStream paqueteReenvio=new ObjectOutputStream(socketEnvia.getOutputStream());			
-				paqueteReenvio.writeObject(paqueteRecibido);		
-				socketEnvia.close();				
-				serverRecibe.close();
-			}
-			
-		}
-		
-		//------------------------------------------------------------
 		
 		}else if(tipoMensaje.equals("nick")){
 			

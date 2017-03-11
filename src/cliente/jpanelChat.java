@@ -16,9 +16,10 @@ public class jpanelChat extends JPanel{
 	public JTextField caja;
 	public JComboBox ip;
 	public JScrollPane barra;
-	public boolean b;
 	public StyledDocument styleDoc;
 	public SimpleAttributeSet estilo,estilo2;
+	public HashMap<String,JScrollPane> hbarra;
+	public HashMap<String,JTextPane> harea;
 	public jpanelChat(){
 		
 		//--- Panel properties --------------------
@@ -35,12 +36,8 @@ public class jpanelChat extends JPanel{
 		online=new JLabel("Online: ");
 		enviar=new JButton("Enviar");
 		
-		area=new JTextPane();		
-		barra=new JScrollPane(area);		
-		area.setEditable(false);
-		styleDoc=area.getStyledDocument();
-		barra.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		barra.setHorizontalScrollBar(null);
+		hbarra=new HashMap<String,JScrollPane>();
+		harea=new HashMap<String,JTextPane>();
 		
 		estilo=new SimpleAttributeSet();
 		estilo2=new SimpleAttributeSet();
@@ -52,7 +49,7 @@ public class jpanelChat extends JPanel{
 		online.setBounds(190,5,60,20);
 		ip.setBounds(250,5,140,20);
 		
-		barra.setBounds(5,35,390,520);
+		
 		
 		caja.setBounds(5,570,300,20);
 		enviar.setBounds(310,570,80,20);
@@ -67,10 +64,35 @@ public class jpanelChat extends JPanel{
 		StyleConstants.setBold(estilo2, true);
 		StyleConstants.setFontSize(estilo2, 14);		
 		StyleConstants.setAlignment(estilo2, 2);
+		
+		ip.addItem("Chat Grupal");
 
 		caja.addKeyListener(new teclaEnviar(this));
 		
-		add(caja);add(enviar);add(nick);add(nnick);add(online);add(ip);add(barra);
+		creaArea("Chat Grupal");
 		
+		add(caja);add(enviar);add(nick);add(nnick);add(online);add(ip);
+		
+	}
+	
+	public void creaArea(String ip){
+		
+		
+		area=new JTextPane();		
+		barra=new JScrollPane(area);		
+		area.setEditable(false);
+		
+		barra.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		barra.setHorizontalScrollBar(null);	
+		
+		
+		barra.setBounds(5,35,390,520);
+		
+		hbarra.put(ip, barra);
+		harea.put(ip, area);
+		
+		this.add(barra);
+		
+		JOptionPane.showMessageDialog(null, "catindad de areas "+ harea.size());
 	}
 }
