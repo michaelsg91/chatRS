@@ -14,7 +14,6 @@ public class accionComboIp implements ActionListener{
 	
 	public void actionPerformed(ActionEvent e){
 		if(jf.jpc.ip.getSelectedItem()!=null){
-			
 		
 		
 		String ip=(String)jf.jpc.ip.getSelectedItem();
@@ -30,11 +29,9 @@ public class accionComboIp implements ActionListener{
 		
 		for(Map.Entry<String, JScrollPane> z: jf.jpc.hbarra.entrySet()){
 			if(ip.equals(z.getKey())){
-				barra=z.getValue();
-				barra.setVisible(true);
+				z.getValue().setVisible(true);
 			}else{
-				barra=z.getValue();
-				barra.setVisible(false);
+				z.getValue().setVisible(false);
 			}
 		}
 		

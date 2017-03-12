@@ -91,8 +91,9 @@ public class jpanelChat extends JPanel{
 		hbarra.put(ip, barra);
 		harea.put(ip, area);
 		
+		barra.setVisible(false);
+		
 		this.add(barra);
 		
-		JOptionPane.showMessageDialog(null, "catindad de areas "+ harea.size());
 	}
 }

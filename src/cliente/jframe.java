@@ -15,7 +15,7 @@ public class jframe extends JFrame implements Runnable{
 	public JTextPane area;
 	public JScrollPane barra;
 	public String ipRemota;
-	String IpLocal;
+	public String IpLocal;
 	HashMap<String,String> IpsMenu;
 	public jframe(){
 		hilo=new Thread(this);
@@ -50,6 +50,17 @@ public class jframe extends JFrame implements Runnable{
 					paqueteEnvio paqueteRecibido;
 					
 					while(true){   // Infinite function
+						/*ipSeleccionada=(String)jpc.ip.getSelectedItem();
+						
+						if(!ipSeleccionada.equals("Chat Grupal")){
+							for(Map.Entry<String, String> z: IpsMenu.entrySet()){
+								if(z.getValue().equals(ipSeleccionada)){
+									ipSeleccionada=z.getKey();
+								}
+							}
+						}*/
+						
+						
 						chatRecibe=socketRecibir.accept();
 						
 						localizacion=chatRecibe.getLocalAddress();						
@@ -62,6 +73,14 @@ public class jframe extends JFrame implements Runnable{
 						ipRemota=paqueteRecibido.getIp();
 						
 						if(paqueteRecibido.getTipoMensaje().equals("authorized") || paqueteRecibido.getTipoMensaje().equals("offline")){
+							
+							/*for(Map.Entry<String, JScrollPane> z: jpc.hbarra.entrySet()){
+								if(ipSeleccionada.equals(z.getKey())){
+									z.getValue().setVisible(true);
+								}else{
+									z.getValue().setVisible(false);
+								}
+							}*/
 							
 							this.jpc.setVisible(true);
 							this.jpn.setVisible(false);
@@ -89,7 +108,7 @@ public class jframe extends JFrame implements Runnable{
 								jpc.enviar.setEnabled(true);
 							}
 							
-							this.jpc.caja.requestFocus();
+							jpc.caja.requestFocus();
 							//--------------------------------------------------------------
 							
 						}else if(paqueteRecibido.getTipoMensaje().equals("unauthorized")){ 
@@ -97,6 +116,14 @@ public class jframe extends JFrame implements Runnable{
 							this.jpn.menError.setText("El usario ya está en uso. Intenta con otro.");
 							this.jpn.setVisible(true);
 						}else if(paqueteRecibido.getTipoMensaje().equals("mensaje")){
+													
+							/*for(Map.Entry<String, JScrollPane> z: jpc.hbarra.entrySet()){
+								if(ipSeleccionada.equals(z.getKey())){
+									z.getValue().setVisible(true);
+								}else{
+									z.getValue().setVisible(false);
+								}
+							}*/
 							
 							int tam=paqueteRecibido.getNick().length()+paqueteRecibido.getMensaje().length()+2;
 							
@@ -108,6 +135,7 @@ public class jframe extends JFrame implements Runnable{
 									
 								}					
 							}
+							
 							for(Map.Entry<String, JScrollPane> z: jpc.hbarra.entrySet()){
 								if(ipRemota.equals(z.getKey())){
 									barra=z.getValue();
