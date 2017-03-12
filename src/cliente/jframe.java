@@ -14,8 +14,8 @@ public class jframe extends JFrame implements Runnable{
 	private Thread hilo;
 	public JTextPane area;
 	public JScrollPane barra;
-	public String ipRemota;
-	public String IpLocal;
+	public  SimpleAttributeSet estilo3,estilo4;
+	public String ipRemota,IpLocal;
 	HashMap<String,String> IpsMenu;
 	public jframe(){
 		hilo=new Thread(this);
@@ -50,17 +50,6 @@ public class jframe extends JFrame implements Runnable{
 					paqueteEnvio paqueteRecibido;
 					
 					while(true){   // Infinite function
-						/*ipSeleccionada=(String)jpc.ip.getSelectedItem();
-						
-						if(!ipSeleccionada.equals("Chat Grupal")){
-							for(Map.Entry<String, String> z: IpsMenu.entrySet()){
-								if(z.getValue().equals(ipSeleccionada)){
-									ipSeleccionada=z.getKey();
-								}
-							}
-						}*/
-						
-						
 						chatRecibe=socketRecibir.accept();
 						
 						localizacion=chatRecibe.getLocalAddress();						
@@ -72,18 +61,12 @@ public class jframe extends JFrame implements Runnable{
 						paqueteRecibido=(paqueteEnvio)datosEntrada.readObject();
 						ipRemota=paqueteRecibido.getIp();
 						
+											
 						if(paqueteRecibido.getTipoMensaje().equals("authorized") || paqueteRecibido.getTipoMensaje().equals("offline")){
 							
-							/*for(Map.Entry<String, JScrollPane> z: jpc.hbarra.entrySet()){
-								if(ipSeleccionada.equals(z.getKey())){
-									z.getValue().setVisible(true);
-								}else{
-									z.getValue().setVisible(false);
-								}
-							}*/
+							jpn.setVisible(false);				
+							jpc.setVisible(true);
 							
-							this.jpc.setVisible(true);
-							this.jpn.setVisible(false);
 							//--- Receiving IPs --------------------------------------------
 							IpsMenu=new HashMap<String,String>();
 							
@@ -102,14 +85,10 @@ public class jframe extends JFrame implements Runnable{
 							}
 							//---------------------------------------------------
 							
-							if(jpc.ip.getSelectedItem()==null){
-								jpc.enviar.setEnabled(false);
-							}else{
-								jpc.enviar.setEnabled(true);
-							}
-							
+													
 							jpc.caja.requestFocus();
 							//--------------------------------------------------------------
+												
 							
 						}else if(paqueteRecibido.getTipoMensaje().equals("unauthorized")){ 
 							this.jpc.setVisible(false);
@@ -117,22 +96,14 @@ public class jframe extends JFrame implements Runnable{
 							this.jpn.setVisible(true);
 						}else if(paqueteRecibido.getTipoMensaje().equals("mensaje")){
 													
-							/*for(Map.Entry<String, JScrollPane> z: jpc.hbarra.entrySet()){
-								if(ipSeleccionada.equals(z.getKey())){
-									z.getValue().setVisible(true);
-								}else{
-									z.getValue().setVisible(false);
-								}
-							}*/
-							
+													
 							int tam=paqueteRecibido.getNick().length()+paqueteRecibido.getMensaje().length()+2;
 							
 														
 							for(Map.Entry<String, JTextPane> z: jpc.harea.entrySet()){
 								if(ipRemota.equals(z.getKey())){
 									area=z.getValue();
-									jpc.styleDoc=area.getStyledDocument();
-									
+									jpc.styleDoc=area.getStyledDocument();									
 								}					
 							}
 							
@@ -142,9 +113,31 @@ public class jframe extends JFrame implements Runnable{
 								}					
 							}
 							
-							jpc.styleDoc.setParagraphAttributes(jpc.styleDoc.getLength(), tam, jpc.estilo, false);
-							
-							jpc.styleDoc.insertString(jpc.styleDoc.getLength(),paqueteRecibido.getNick() + ": " + paqueteRecibido.getMensaje() + "\n",jpc.estilo);
+							if(ipRemota.equals("Chat Grupal")){
+								for(Map.Entry<String, String> z: IpsMenu.entrySet()){
+									if(z.getValue().equals(paqueteRecibido.getNick())){
+										ipRemota=z.getKey();
+									}
+								}
+								for(Map.Entry<String, SimpleAttributeSet> z: jpc.estiloC.entrySet()){
+									if(z.getKey().equals("Chat Grupal")){
+										estilo4=z.getValue();
+									}
+									if(ipRemota.equals(z.getKey())){
+										estilo3=z.getValue();
+									}					
+								}
+								jpc.styleDoc.setParagraphAttributes(jpc.styleDoc.getLength(), paqueteRecibido.getNick().length()+2, estilo3, false);
+								jpc.styleDoc.insertString(jpc.styleDoc.getLength(),paqueteRecibido.getNick() + ": ", estilo3);
+								
+								jpc.styleDoc.setParagraphAttributes(jpc.styleDoc.getLength(), paqueteRecibido.getMensaje().length(), estilo4, false);
+								jpc.styleDoc.insertString(jpc.styleDoc.getLength(),paqueteRecibido.getMensaje() + "\n", estilo4);
+								
+							}else{
+								jpc.styleDoc.setParagraphAttributes(jpc.styleDoc.getLength(), tam, jpc.estilo, false);								
+								jpc.styleDoc.insertString(jpc.styleDoc.getLength(),paqueteRecibido.getMensaje() + "\n",jpc.estilo);
+							}
+												
 							
 							//--- Automatic scrolling down -------------
 							Dimension tamTextPane=area.getSize();
